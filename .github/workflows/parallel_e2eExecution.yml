@@ -1,0 +1,57 @@
+name: Run Selenium parallel and end-to-end tests with Allure
+
+on:
+  push:
+    branches: [ master, ci-workflow-testing ]
+
+jobs:
+  run-tests:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        suite:
+          - runClassesInParallel.xml
+          - runE2Eclass.xml
+
+    name: Run TestNG suite - ${{ matrix.suite }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run TestNG suite
+        run: mvn clean test -DsuiteXmlFile=${{ matrix.suite }}
+
+      - name: Download Allure Commandline
+        run: |
+          curl -o allure.zip -L https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip
+          powershell -Command "Expand-Archive -Path allure.zip -DestinationPath allure"
+          echo "ALLURE_HOME=${{ github.workspace }}\allure\allure-2.27.0" >> $GITHUB_ENV
+
+      - name: Generate Allure Report
+        run: |
+          $env:PATH += ";${{ env.ALLURE_HOME }}\bin"
+          allure generate test-results/allure-results --clean -o target/allure-report
+
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: Allure-Report-${{ matrix.suite }}
+          path: test-results/allure-report
+
+
+
