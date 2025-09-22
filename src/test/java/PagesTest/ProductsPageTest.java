@@ -1,117 +1,165 @@
 package PagesTest;
 
-import Data.ProductsPageData;
-import Data.loginCradintials;
-import Pages.*;
-import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+import Assertions.Validation;
+import Utils.UIActions.ElementActions;
+import Utils.Pages.HomePage;
+import Utils.Pages.LoginPage;
+import Utils.Pages.ProductsPage;
+import Utils.Pojo.DataHelperMethods;
+import org.testng.annotations.*;
+import static Utils.Driver.DriverManager.*;
 
 public class ProductsPageTest {
-
-    private WebDriver driver;
-    DriverManager driverManager;
     HomePage home = new HomePage();
     LoginPage loginPage = new LoginPage();
     ProductsPage products = new ProductsPage();
-    ElementActions action ;
+    ElementActions action = new ElementActions();
+    Validation validation = new Validation();
+    DataHelperMethods helperMethod = new DataHelperMethods();
 
-    @BeforeClass
+    @BeforeMethod
     public void openBrowser(){
-        action = new ElementActions();
-        driverManager = new DriverManager(driver);
-        driverManager.setupDriver();
-        driver = driverManager.getDriver();
-        action.Click(home.navigateToLoginPage(driver));
-        loginPage.loginSteps(driver,loginCradintials.getLoggedEmail(),loginCradintials.getPassword());
-        action.Click(products.ProductsButton(driver));
+
+        createInstance(helperMethod.getBrowserNames(0).getBrowser());
+        action.navigation(getDriver(),helperMethod.getUrlData(0).getHomeUrl());
+        action.Click(home.navigateToLoginPage(getDriver()));
+        loginPage.loginSteps(getDriver(),helperMethod.getLoginData(0).getEmail(),
+                helperMethod.getLoginData(0).getPassword());
+        action.Click(products.ProductsButton(getDriver()));
     }
 
-    SoftAssert soft = new SoftAssert();
 
     @Test
     public void validateNavigationToProductsPage() {
+
         String expectedUrl = "https://www.automationexercise.com/products";
-        String actualUrl = driver.getCurrentUrl();
-        soft.assertEquals(actualUrl,expectedUrl,"error Msg : assert1 ");
+        String actualUrl = action.getCurrentUrl(getDriver());
+        validation.assertEqualsString(actualUrl,expectedUrl,"error Msg : assert1 ");
 
         String expectedOutput = "ALL PRODUCTS";
-        String actualOutput = action.getText(products.getAllProductsText(driver));
-        soft.assertEquals(actualOutput,expectedOutput,"error message : assert 2");
-        soft.assertAll();
+        action.ScrollingByElement(getDriver(),products.getAllProductsText(getDriver()));
+        String actualOutput = action.getText(products.getAllProductsText(getDriver()));
+        validation.assertEqualsString(actualOutput,expectedOutput,"error message : assert 2");
+
     }
 
-    @Test (dependsOnMethods = "isSpecialOfferImgDisplayed")
-    public void validateCategoryTextExists() {
-        String expectedOutput = "Category";
-        String actualOutput = action.getText(products.getCategoryText(driver));
-        soft.assertTrue(actualOutput.contains(expectedOutput),"error message : assert 1");
+    @Test
+    public void checkTextsAndImages() {
+
+        String expectedOutput = "CATEGORY";
+        action.ScrollingByElement(getDriver(),products.getCategoryText(getDriver()));
+        String actualOutput = action.getText(products.getCategoryText(getDriver()));
+        validation.assertEqualsString(actualOutput,expectedOutput,"error message : assert 3");
+
+        String expectedResult = "BRANDS";
+        action.ScrollingByElement(getDriver(),products.getBrandText(getDriver()));
+        String actualResult = action.getText(products.getBrandText(getDriver()));
+        validation.assertEqualsString(actualResult, expectedResult,"error message : assert 4");
+
+        String expectedLogo = "/static/images/home/logo.png";
+        action.ScrollingByElement(getDriver(),products.isAutomationExerciseImgDisplayed(getDriver()));
+        String actualLogo = action.getAttribute(products.isAutomationExerciseImgDisplayed(getDriver()),"src");
+        validation.assertTrueString(actualLogo, expectedLogo,"error message : assert 5");
+
+        action.ScrollingByElement(getDriver(),products.isSpecialOfferImgDisplayed(getDriver()));
+        boolean display = action.isDisplayed(products.isSpecialOfferImgDisplayed(getDriver()));
+        validation.assertTrueBoolean(display,"error message : assert 6");
+        String expectedImage = "/static/images/shop/sale.jpg";
+        String actualImage = action.getAttribute(products.isSpecialOfferImgDisplayed(getDriver()),"src");
+        validation.assertTrueString(actualImage,expectedImage,"error message : assert 7");
+        validation.assertAll();
     }
 
-    @Test (dependsOnMethods = "validateCategoryTextExists")
-    public void validateBrandsTextExists() {
-        String expectedOutput = "Brands";
-        String actualOutput = action.getText(products.getBrandText(driver));
-        soft.assertTrue(actualOutput.contains(expectedOutput),"error message : assert 1");
-    }
-
-    @Test (dependsOnMethods = "validateNavigationToProductsPage")
-    public void isAutomationExerciseDisplayed () {
-        soft.assertTrue(action.isDisplayed(products.isAutomationExerciseImgDisplayed(driver)),"error message : assert 1");
-        String expectedOutput = "/static/images/home/logo.png";
-        String actualOutput = action.getAttribute(products.isAutomationExerciseImgDisplayed(driver),"src");
-        soft.assertTrue(actualOutput.contains(expectedOutput),"error message : assert 2");
-        soft.assertAll();
-    }
-
-    @Test (dependsOnMethods = "isAutomationExerciseDisplayed")
-    public void isSpecialOfferImgDisplayed () {
-        soft.assertTrue(action.isDisplayed(products.isSpecialOfferImgDisplayed(driver)),"error message : assert 1");
-        String expectedOutput = "/static/images/shop/sale.jpg";
-        String actualOutput = action.getAttribute(products.isSpecialOfferImgDisplayed(driver),"src");
-        soft.assertTrue(actualOutput.contains(expectedOutput),"error message : assert 2");
-        soft.assertAll();
-    }
-
-    @Test (dependsOnMethods = "validateBrandsTextExists")
+    @Test
     public void validateALLProductsSize() {
+
         int expectedOutput = 34;
-        int actualOutput = products.getAllProductsSize(driver);
-        soft.assertEquals(actualOutput,expectedOutput,"error message : assert 1");
+        int actualOutput = products.getAllProductsSize(getDriver());
+        validation.assertEqualsInt(actualOutput,expectedOutput,"error message : assert 8");
     }
 
-    @Test (dependsOnMethods = "getProductName")
-    public void getProductPrice(){
+    @Test
+    public void checkProductId30Information(){
 
-        String expectedResult = "1500";
-        String actualResult = action.getText(products.getProductPrice(driver));
-        soft.assertTrue(actualResult.contains(expectedResult),"error message : assert 1");
+        String expectedResult = helperMethod.getProductData(0).getPrice();
+        action.ScrollingByElement(getDriver(),products.priceOfProductId30(getDriver()));
+        String actualResult = action.getText(products.priceOfProductId30(getDriver())).split(" ")[1];
+        validation.assertEqualsString(actualResult,expectedResult,"error message : assert 9");
+
+        String expectedOutput =helperMethod.getProductData(0).getProductName();
+        action.ScrollingByElement(getDriver(),products.nameOfProductId30(getDriver()));
+        String actualOutput = action.getText(products.nameOfProductId30(getDriver())).split(" ")[0];
+        validation.assertEqualsString(actualOutput,expectedOutput,"error message : assert 10");
+
+        String expectedBrand =helperMethod.getProductData(0).getBrand();
+        action.ScrollingByElement(getDriver(),products.nameOfProductId30(getDriver()));
+        String actualBrand = action.getText(products.nameOfProductId30(getDriver())).split(" ")[1];
+        validation.assertEqualsString(actualBrand,expectedBrand,"error message : assert 11");
+
+        String expectedCategory =helperMethod.getProductData(0).getSubCategoryName();
+        action.ScrollingByElement(getDriver(),products.nameOfProductId30(getDriver()));
+        String actualCategory = action.getText(products.nameOfProductId30(getDriver())).split(" ")[2];
+        validation.assertEqualsString(actualCategory, expectedCategory,"error message : assert 12");
+
 
     }
 
-    @Test (dependsOnMethods = "validateALLProductsSize")
-    public void getProductName() {
-        String expectedOutput = "Premium Polo";
-        String actualOutput = action.getText(products.getProductName(driver));
-        soft.assertTrue(actualOutput.contains(expectedOutput),"error message : assert 1");
-   }
+        @Test
+        public void checkProductId29Information(){
+
+            String expectedResult = helperMethod.getProductData(1).getPrice();
+            action.ScrollingByElement(getDriver(),products.priceOfProductId29(getDriver()));
+            String actualResult = action.getText(products.priceOfProductId29(getDriver())).split(" ")[1];
+            validation.assertEqualsString(actualResult,expectedResult,"error message : assert 9");
+
+            String expectedOutput =helperMethod.getProductData(1).getProductName();
+            action.ScrollingByElement(getDriver(),products.nameOfProductId29(getDriver()));
+            String actualOutput = action.getText(products.nameOfProductId29(getDriver())).split("T")[0].trim();
+            validation.assertEqualsString(actualOutput,expectedOutput,"error message : assert 10");
+
+            String expectedCategory =helperMethod.getProductData(1).getSubCategoryName();
+            action.ScrollingByElement(getDriver(),products.nameOfProductId29(getDriver()));
+            String actualCategory = action.getText(products.nameOfProductId29(getDriver())).split(" ")[4];
+            validation.assertEqualsString(actualCategory, expectedCategory,"error message : assert 12");
 
 
+        }
 
-    @Test (dependsOnMethods = "getProductPrice")
+    @Test
+    public void checkProductImagesUrls(){
+        int actualUrl = action.getBrokenUrl(getDriver(),products.getImgUrls(),"src");
+        validation.assertEqualsInt(actualUrl,0,"error message : assert 13");
+
+    }
+
+    @Test
+    public void addProductToCart() {
+        action.ScrollingByElement(getDriver(),products.searchField(getDriver()));
+        products.searchForProductSteps(getDriver(),helperMethod.getSearchKeys(0).getSearchKey());
+        products.clickAddToCartId30(getDriver());
+        String expectedOutput = "Your product has been added to cart.";
+        String actualOutput = action.getText(products.getProductAddedToCartMsg(getDriver()));
+        validation.assertEqualsString(actualOutput,expectedOutput,"error message : assert 14");
+        action.ScrollingByElement(getDriver(),products.clickViewCart(getDriver()));
+        action.Click(products.clickViewCart(getDriver()));
+        String expectedUrl ="https://www.automationexercise.com/view_cart";
+        String actualUrl = action.getCurrentUrl(getDriver());
+        validation.assertEqualsString(actualUrl,expectedUrl,"error message : assert 15");
+    }
+
+    @Test
     public void navigateToProductPage() {
-        action.Click(products.clickViewProduct(driver));
+
+        action.ScrollingByElement(getDriver(),products.clickViewProductId30(getDriver()));
+        action.Click(products.clickViewProductId30(getDriver()));
         String expectedUrl = "https://www.automationexercise.com/product_details/30";
-        String actualUrl = driver.getCurrentUrl();
-        soft.assertEquals(actualUrl,expectedUrl,"error message : assert 1");
+        String actualUrl = action.getCurrentUrl(getDriver());
+        validation.assertEqualsString(actualUrl,expectedUrl,"error message : assert 16");
     }
 
-
-    @AfterClass
+    @AfterMethod
     public void quitDriver(){
-        driverManager.quitDriver(driver);
+        tearDown();
     }
 
 

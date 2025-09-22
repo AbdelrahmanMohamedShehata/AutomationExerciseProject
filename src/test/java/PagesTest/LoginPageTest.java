@@ -1,61 +1,84 @@
 package PagesTest;
-
-import Data.loginCradintials;
-import Pages.DriverManager;
-import Pages.HomePage;
-import Pages.LoginPage;
-import org.openqa.selenium.WebDriver;
-import Pages.ElementActions;
+import Assertions.Validation;
+import Utils.Pages.HomePage;
+import Utils.Pages.LoginPage;
+import Utils.UIActions.ElementActions;
+import Utils.Pojo.DataHelperMethods;
 import org.testng.annotations.*;
-import org.testng.asserts.SoftAssert;
+import static Utils.Driver.DriverManager.*;
 
 public class LoginPageTest {
-    private WebDriver driver;
-    DriverManager driverManager;
+
     HomePage home = new HomePage();
     LoginPage loginPage = new LoginPage();
-    ElementActions action ;
+    ElementActions action = new ElementActions() ;
+    Validation validation = new Validation();
+    DataHelperMethods helperMethod = new DataHelperMethods();
 
     @BeforeMethod
     public void openBrowser(){
-        action = new ElementActions();
-        driverManager = new DriverManager(driver);
-        driverManager.setupDriver();
-        driver = driverManager.getDriver();
-        action.Click(home.navigateToLoginPage(driver));
+        createInstance(helperMethod.getBrowserNames(0).getBrowser());
+        action.navigation(getDriver(),helperMethod.getUrlData(0).getHomeUrl());
+        action.Click(home.navigateToLoginPage(getDriver()));
     }
-
-    SoftAssert soft = new SoftAssert();
 
     @Test
     public void LoginWithRegisteredEmail(){
-        loginPage.loginSteps(driver,loginCradintials.getLoggedEmail(),loginCradintials.getPassword());
+        loginPage.loginSteps(getDriver(),helperMethod.getLoginData(0).getEmail(),
+                helperMethod.getLoginData(0).getPassword());
         String expectedResult = "Logout";
-        String actualResult = action.getText(loginPage.getLogoutText(driver));
-        soft.assertEquals(actualResult,expectedResult,"error message : assert 1");
+        String actualResult = action.getText(loginPage.getLogoutText(getDriver()));
+        validation.assertEqualsString(actualResult,expectedResult,"error message : assert 1");
 
         String expectedOutput = "Delete Account";
-        String actualOutput = action.getText(loginPage.getDeleteAccountText(driver));
-        soft.assertEquals(actualOutput,expectedOutput,"error message : assert 2");
+        String actualOutput = action.getText(loginPage.getDeleteAccountText(getDriver()));
+        validation.assertEqualsString(actualOutput,expectedOutput,"error message : assert 2");
 
         String expectedText = "Logged in as";
-        String actualText = action.getText(loginPage.getLoggedInAsText(driver));
-        soft.assertTrue(actualText.contains(expectedText),"error message : assert 3");
+        String actualText = action.getText(loginPage.getLoggedInAsText(getDriver()));
+        validation.assertTrueString(actualText,expectedText,"error message : assert 3");
 
-        soft.assertAll();
+        validation.assertAll();
     }
 
     @Test
-    public void LoginWithUnRegisteredEmail() {
-        loginPage.loginSteps(driver, loginCradintials.getUnRegisteredEmail(), loginCradintials.getPassword());
+    public void LoginWithUnRegisteredEmailAndWrongEmails() {
+        loginPage.loginSteps(getDriver(),helperMethod.getLoginData(1).getEmail(),
+                helperMethod.getLoginData(1).getPassword());
         String expectedResult = "Your email or password is incorrect!";
-        String actualResult = action.getText(loginPage.LoginUnsuccessfully(driver));
-        soft.assertEquals(actualResult, expectedResult, "error message : assert 1");
-
+        String actualResult = action.getText(loginPage.LoginUnsuccessfully(getDriver()));
+        validation.assertEqualsString(actualResult, expectedResult, "error message : assert 1");
+        loginPage.ClearLoginCredentials(getDriver());
+        loginPage.loginSteps(getDriver(),helperMethod.getLoginData(2).getWrongEmail(),
+                helperMethod.getLoginData(2).getPassword());
+        validation.assertEqualsString(actualResult, expectedResult, "error message : assert 2");
+        loginPage.ClearLoginCredentials(getDriver());
+        loginPage.loginSteps(getDriver(),helperMethod.getLoginData(3).getWrongEmail(),
+                helperMethod.getLoginData(3).getPassword());
+        validation.assertEqualsString(actualResult, expectedResult, "error message : assert 3");
     }
+
+    @Test
+    public void loginWithEmailWithMistakes(){
+        loginPage.loginSteps(getDriver(),helperMethod.getLoginData(4).getEmailWithMistakes(),
+                helperMethod.getLoginData(4).getPassword());
+        String expectedResult = "Please include an '@' in the email address";
+        String actualResult = action.getTextByJSExecutor(getDriver(),loginPage.loginEmail(getDriver())).split("\\.")[0];
+        validation.assertEqualsString(actualResult, expectedResult, "error message : assert 1");
+        loginPage.ClearLoginCredentials(getDriver());
+        loginPage.loginSteps(getDriver(),helperMethod.getLoginData(5).getEmailWithMistakes(),
+                helperMethod.getLoginData(5).getPassword());
+        if (action.getCurrentUrl(getDriver()).equals(helperMethod.getUrlData(0).getHomeUrl())){
+        validation.assertFail("The user logged in successfully with invalid email so this is a bug");}
+        else {
+            System.out.println("The user failed to login successfully");
+        }
+        validation.assertAll();
+    }
+
         @AfterMethod
     public void quitDriver(){
-        driverManager.quitDriver(driver);
+        tearDown();
     }
 
 }

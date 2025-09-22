@@ -1,0 +1,40 @@
+[
+  { "testDataType": "invalidMonthDate",
+    "dataInput": 0
+  },
+  { "testDataType": "invalidMonthDate",
+    "dataInput": 13
+  },
+  { "testDataType": "invalidYearDate",
+    "dataInput": 2024
+  },
+  { "testDataType": "specialCharacter",
+    "dataInput": "@"
+  },
+  { "testDataType": "character",
+    "dataInput": "h"
+  },
+  {
+    "testDataType": "characters",
+    "dataInput": "hello"
+  },
+  { "testDataType": "specialCharacters",
+    "dataInput":"@#$%*"
+  },
+  { "testDataType": "numbers",
+    "dataInput": 2345444
+  },
+  {
+    "testDataType": "number",
+    "dataInput": 0
+  },
+  { "testDataType": "number",
+    "dataInput": -1
+  },
+  { "testDataType": "number",
+    "dataInput": 5.6
+  },
+  { "testDataType": "number",
+    "dataInput": 0.1
+  }
+]

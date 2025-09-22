@@ -1,0 +1,34 @@
+[
+  {
+    "email":"alexpato@gmail.com",
+    "password":"123asd"
+  },
+  {
+    "email": "alexanderpato@gmail.com",
+    "password":"123asd1"
+  },
+  {
+    "wrongEmail": "ahmed354@com",
+    "password":"123asdA5"
+  },
+  {
+    "wrongEmail": "ahmed354@gmail",
+    "password":"123asdA5"
+  },
+  {
+  "emailWithMistakes": "ahmed354gmail.com",
+  "password":"123asdA5"
+  },
+  {
+    "emailWithMistakes": "ahmed345@gmial.co",
+    "password":"123asdFG"
+  },
+  {
+  "email":"abdo.3452@gmail.com",
+  "password":"ghtB453"
+  },
+  {
+    "email":"peter.357@gmail.com",
+    "password":"@#567wgo"
+  }
+]

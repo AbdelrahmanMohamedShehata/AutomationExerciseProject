@@ -1,49 +1,54 @@
 package PagesTest;
 
-import Data.loginCradintials;
-import Pages.*;
-import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+import Assertions.Validation;
+import Utils.Pages.*;
+import Utils.Pojo.DataHelperMethods;
+import Utils.UIActions.ElementActions;
+import org.testng.annotations.*;
+import static Utils.Driver.DriverManager.*;
 
 public class ProductReviewTest {
-
-    private WebDriver driver;
-    DriverManager driverManager;
     HomePage home = new HomePage();
     LoginPage loginPage = new LoginPage();
     ProductsPage products = new ProductsPage();
-    ElementActions action ;
+    ElementActions action = new ElementActions();
     ProductReview review = new ProductReview();
-
-    @BeforeClass
+    Validation validation = new Validation();
+    DataHelperMethods helperMethod = new DataHelperMethods();
+    @BeforeMethod
     public void openBrowser(){
-        action = new ElementActions();
-        driverManager = new DriverManager(driver);
-        driverManager.setupDriver();
-        driver = driverManager.getDriver();
-        action.Click(home.navigateToLoginPage(driver));
-        loginPage.loginSteps(driver, loginCradintials.getLoggedEmail(),loginCradintials.getPassword());
-        action.Click(products.ProductsButton(driver));
-        products.searchForProductSteps(driver);
+        createInstance(helperMethod.getBrowserNames(0).getBrowser());
+        action.navigation(getDriver(),helperMethod.getUrlData(0).getHomeUrl());
+        action.Click(home.navigateToLoginPage(getDriver()));
+        loginPage.loginSteps(getDriver(),helperMethod.getLoginData(0).getEmail(),
+                helperMethod.getLoginData(0).getPassword());
+        action.Click(products.ProductsButton(getDriver()));
+        action.ScrollingByElement(getDriver(),products.searchButton(getDriver()));
+        products.searchForProductSteps(getDriver(),helperMethod.getSearchKeys(0).getSearchKey());
+        action.ScrollingByElement(getDriver(),products.clickViewProductId30(getDriver()));
+        action.Click(products.clickViewProductId30(getDriver()));
     }
 
-    SoftAssert soft = new SoftAssert();
 
-    @Test
+    @Test()
     public void sendReviewSuccessfully(){
-        action.Click(products.clickViewProduct(driver));
-        review.SendReviewSteps(driver);
-            String expectedPrice ="Thank you for your review.";
-            String actualPrice = action.getText(review.getReviewSuccessMsg(driver));
-            soft.assertEquals(actualPrice,expectedPrice,"error message : assert 1");
+        review.SendReviewSteps(getDriver(),helperMethod.getReviewData(0).getName(),
+         helperMethod.getReviewData(0).getEmail(),helperMethod.getReviewData(0).getAddReview());
+            String expectedText ="Thank you for your review.";
+            String actualText = action.getText(review.getReviewSuccessMsg(getDriver()));
+        validation.assertEqualsString(actualText, expectedText,"error message : assert 1");
     }
 
-    @AfterClass
+    @Test()
+    public void getWriteReviewText(){
+        String expectedText ="WRITE YOUR REVIEW";
+        String actualText = action.getText(review.getWriteYourReviewText(getDriver()));
+        validation.assertEqualsString(actualText,expectedText,"error message : assert 1");
+    }
+
+    @AfterMethod
     public void quitDriver(){
-        driverManager.quitDriver(driver);
+        tearDown();
     }
 
 

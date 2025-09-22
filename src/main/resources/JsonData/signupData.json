@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Alex Pato",
+    "email": "alexpato@gmail.com"
+  },
+  {
+  "name": "SGSFG EEgd",
+  "email": "Cr7gdm343@gmail.com"
+  },
+  {
+  "name": "ahmed",
+  "wrongEmail": "ahmed354@com"
+  },
+  {
+  "name": "ahmed",
+  "wrongEmail": "ahmed354@gmail"
+  },
+  {
+    "name": "ahmed",
+    "emailWithMistakes": "ahmed354gmail.com"
+  },
+  {
+    "name": "abdelhamid",
+    "emailWithMistakes": "abdelhamid345@gmial.co"
+  }
+]

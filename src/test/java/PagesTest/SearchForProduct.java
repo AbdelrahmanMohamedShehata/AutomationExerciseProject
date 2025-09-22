@@ -1,58 +1,71 @@
 package PagesTest;
 
-import Data.loginCradintials;
-import Pages.*;
-import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+import Assertions.Validation;
+import Utils.UIActions.ElementActions;
+import Utils.Pages.HomePage;
+import Utils.Pages.LoginPage;
+import Utils.Pages.ProductsPage;
+import Utils.Pojo.DataHelperMethods;
+import org.testng.annotations.*;
+import static Utils.Driver.DriverManager.*;
 
 public class SearchForProduct {
 
-    private WebDriver driver;
-    DriverManager driverManager;
     HomePage home = new HomePage();
     LoginPage loginPage = new LoginPage();
     ProductsPage products = new ProductsPage();
-    ElementActions action ;
+    ElementActions action = new ElementActions();
+    Validation validation = new Validation();
+    DataHelperMethods helperMethod = new DataHelperMethods();
 
-    @BeforeClass
+    @BeforeMethod
     public void openBrowser(){
-        action = new ElementActions();
-        driverManager = new DriverManager(driver);
-        driverManager.setupDriver();
-        driver = driverManager.getDriver();
-        action.Click(home.navigateToLoginPage(driver));
-        loginPage.loginSteps(driver, loginCradintials.getLoggedEmail(),loginCradintials.getPassword());
-        action.Click(products.ProductsButton(driver));
+        createInstance(helperMethod.getBrowserNames(0).getBrowser());
+        action.navigation(getDriver(),helperMethod.getUrlData(0).getHomeUrl());
+        action.Click(home.navigateToLoginPage(getDriver()));
+        loginPage.loginSteps(getDriver(),helperMethod.getLoginData(0).getEmail(),
+                helperMethod.getLoginData(0).getPassword());
+        action.Click(products.ProductsButton(getDriver()));
+
     }
 
-    SoftAssert soft = new SoftAssert();
 
     @Test
     public void validateNavigationToProductsPage() {
-        products.searchForProductSteps(driver);
+        products.searchForProductSteps(getDriver(),helperMethod.getSearchKeys(0).getSearchKey());
         String expectedUrl = "https://www.automationexercise.com/products?search=Tshirt";
-        String actualUrl = driver.getCurrentUrl();
-        soft.assertEquals(actualUrl,expectedUrl,"error Msg : assert1 ");
+        String actualUrl = action.getCurrentUrl(getDriver());
+        validation.assertEqualsString(actualUrl,expectedUrl,"error Msg : assert1 ");
 
         String expectedOutput = "SEARCHED PRODUCTS";
-        String actualOutput = action.getText(products.getSearchedProductsText(driver));
-        soft.assertEquals(actualOutput,expectedOutput,"error message : assert 2");
-        soft.assertAll();
+        String actualOutput = action.getText(products.getSearchedProductsText(getDriver()));
+        validation.assertEqualsString(actualOutput,expectedOutput,"error message : assert 2");
+        validation.assertAll();
     }
 
-    @Test(dependsOnMethods = "validateNavigationToProductsPage")
+    @Test
     public void validateALLSearchedProductsSize() {
+        products.searchForProductSteps(getDriver(),helperMethod.getSearchKeys(0).getSearchKey());
         int expectedOutput = 6;
-        int actualOutput = products.getAllSearchedProductsSize(driver);
-        soft.assertEquals(actualOutput,expectedOutput,"error message : assert 1 Method 2");
+        int actualOutput = products.getAllSearchedProductsSize(getDriver());
+        validation.assertEqualsInt(actualOutput,expectedOutput,"error message : assert 1 ");
     }
 
-    @AfterClass
+    @Test
+    public void SearchWithInvalidData(){
+        for(int x=6;x<9;x++) {
+            action.Clear(products.searchField(getDriver()));
+            products.searchForProductSteps(getDriver(), helperMethod.getAllInvalidData().get(x).getDataInput());
+            int expectedOutput = 0;
+            int actualOutput = products.getAllSearchedProductsSize(getDriver());
+            validation.assertEqualsInt(actualOutput, expectedOutput, "error message : assert 2");
+
+        }
+        validation.assertAll();
+    }
+
+    @AfterMethod
     public void quitDriver(){
-        driverManager.quitDriver(driver);
+        tearDown();
     }
-
 }

@@ -1,99 +1,93 @@
 package PagesTest;
-
-import Data.loginCradintials;
-import Pages.*;
-import Pages.CartPage;
-import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
+import Assertions.Validation;
+import Utils.Pages.*;
+import Utils.Pojo.DataHelperMethods;
+import Utils.UIActions.ElementActions;
+import org.testng.annotations.*;
+import static Utils.Driver.DriverManager.*;
 
 public class ShoppingCartPage {
 
-    private WebDriver driver;
-    DriverManager driverManager;
     HomePage home = new HomePage();
     LoginPage loginPage = new LoginPage();
     ProductsPage products = new ProductsPage();
-    ElementActions action ;
+    ElementActions action = new ElementActions() ;
     ProductPage product = new ProductPage();
     CartPage cart = new CartPage();
+    Validation validation = new Validation();
+    DataHelperMethods helperMethod = new DataHelperMethods();
 
-    @BeforeClass
+    @BeforeMethod
     public void openBrowser(){
-        action = new ElementActions();
-        driverManager = new DriverManager(driver);
-        driverManager.setupDriver();
-        driver = driverManager.getDriver();
-        action.Click(home.navigateToLoginPage(driver));
-        loginPage.loginSteps(driver, loginCradintials.getLoggedEmail(),loginCradintials.getPassword());
-        action.Click(products.ProductsButton(driver));
-        products.searchForProductSteps(driver);
-        action.Click(products.clickViewProduct(driver));
-        product.changeProductQuantity(driver,"2");
-        action.Click(product.addProductToCart(driver));
-        action.Click(product.clickOnViewCartButton(driver));
+
+        createInstance(helperMethod.getBrowserNames(0).getBrowser());
+        action.navigation(getDriver(),helperMethod.getUrlData(0).getHomeUrl());
+        action.Click(home.navigateToLoginPage(getDriver()));
+        loginPage.loginSteps(getDriver(),helperMethod.getLoginData(0).getEmail(),
+                helperMethod.getLoginData(0).getPassword());
+        action.Click(products.ProductsButton(getDriver()));
+        products.clickAddToCartId30(getDriver());
+        action.Click(products.clickViewCart(getDriver()));
+        action.Click(cart.removeProduct30FromCart(getDriver()));
+        action.Click(cart.clickHere(getDriver()));
+        action.ScrollingByElement(getDriver(),products.searchButton(getDriver()));
+        products.searchForProductSteps(getDriver(),helperMethod.getSearchKeys(0).getSearchKey());
+        action.ScrollingByElement(getDriver(),products.clickViewProductId30(getDriver()));
+        action.Click(products.clickViewProductId30(getDriver()));
+        product.changeProductQuantity(getDriver(),helperMethod.getProductData(0).getQuantity());
+        action.Click(product.addProductToCart(getDriver()));
+        action.Click(product.ViewCartButton(getDriver()));
 
     }
 
-    SoftAssert soft = new SoftAssert();
 
     @Test
     public void validateShoppingCartPage (){
         String expectedName = "Shopping Cart";
-        String actualName = action.getText(cart.getShoppingCartText(driver));
-        soft.assertTrue(actualName.contains(expectedName),"error message : assert 1");
+        String actualName = action.getText(cart.getShoppingCartText(getDriver()));
+        validation.assertTrueString(actualName,expectedName,"error message : assert 1");
     }
 
-    @Test (dependsOnMethods = "validateShoppingCartPage")
-    public void checkProductNameInCart (){
+    @Test
+    public void checkProductInformationInCart (){
         String expectedName = "Premium Polo";
-        String actualName = action.getText(cart.getCartProductName(driver));
-        soft.assertTrue(actualName.contains(expectedName),"error message : assert 1");
+        String actualName = action.getText(cart.getCartProductName(getDriver()));
+        validation.assertTrueString(actualName,expectedName,"error message : assert 1");
+
+        String expectedPrice = helperMethod.getProductData(0).getPrice();
+        String actualPrice = action.getText(cart.getCartProductPrice(getDriver())).split(" ")[1];
+        validation.assertEqualsString(actualPrice,expectedPrice,"error message : assert 2");
+
+        String expectedTotalPrice = helperMethod.getProductData(0).getTotalPrice();
+        String actualTotalPrice = action.getText(cart.getCartProductTotalPrice(getDriver())).split(" ")[1];
+        validation.assertEqualsString(actualTotalPrice, expectedTotalPrice,"error message : assert 3");
+
+        String expectedQuantity = helperMethod.getProductData(0).getQuantity();
+        String actualQuantity = action.getText(cart.getCartProductQuantity(getDriver()));
+        validation.assertEqualsString(actualQuantity, expectedQuantity,"error message : assert 4");
+        validation.assertAll();
     }
 
-    @Test (dependsOnMethods = "checkProductNameInCart")
-    public void checkProductPriceInCart (){
-        String expectedPrice = "1500";
-        String actualPrice = action.getText(cart.getCartProductPrice(driver));
-        soft.assertTrue(actualPrice.contains(expectedPrice),"error message : assert 1");
-    }
-
-    @Test (dependsOnMethods = "selectProductQuantityInCart")
-    public void checkProductTotalPriceInCart (){
-        String expectedPrice = "3000";
-        String actualPrice = action.getText(cart.getCartProductTotalPrice(driver));
-        soft.assertTrue(actualPrice.contains(expectedPrice),"error message : assert 1");
-    }
-
-    @Test (dependsOnMethods = "checkProductPriceInCart")
-    public void selectProductQuantityInCart (){
-        String expectedQuantity = "2";
-        String actualQuantity = action.getText(cart.getCartProductQuantity(driver));
-        soft.assertEquals(actualQuantity, expectedQuantity,"error message : assert 1");
-    }
-
-    @Test (dependsOnMethods = "removeItemFromCart")
+    @Test
     public void navigateTOCheckoutPage(){
+        action.Click(cart.clickOnCheckoutButton(getDriver()));
         String expectedUrl ="https://www.automationexercise.com/checkout";
-        action.Click(cart.clickOnCheckoutButton(driver));
-        String actualUrl = driver.getCurrentUrl();
-        soft.assertEquals(actualUrl,expectedUrl,"error message : assert 1");
+        String actualUrl = action.getCurrentUrl(getDriver());
+        validation.assertEqualsString(actualUrl,expectedUrl,"error message : assert 1");
     }
 
-    @Test (dependsOnMethods = "checkProductTotalPriceInCart")
-    public void removeItemFromCart(){
-        action.Click(cart.removeProductFromCart(driver));
+    @Test
+    public void checkEmptyCart(){
+        action.Click(cart.removeProduct30FromCart(getDriver()));
         String expectedResult = "Cart is empty!";
-        String actualResult = action.getText(cart.cartIsEmptyMsg(driver));
-
-        soft.assertEquals(actualResult,expectedResult,"error message : assert 1");
+        String actualResult = action.getText(cart.cartIsEmptyMsg(getDriver()));
+        validation.assertEqualsString(actualResult,expectedResult,"error message : assert 1");
+        validation.assertAll();
     }
 
-    @AfterClass
+    @AfterMethod
     public void quitDriver(){
-        driverManager.quitDriver(driver);
+        tearDown();
     }
 
 }

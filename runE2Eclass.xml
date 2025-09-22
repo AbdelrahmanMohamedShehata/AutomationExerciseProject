@@ -1,0 +1,7 @@
+<suite name="SequentialSuite" >
+    <test name="sequentialTests">
+        <classes>
+            <class name="PagesTest.E2ETesting"/>
+        </classes>
+    </test>
+</suite>

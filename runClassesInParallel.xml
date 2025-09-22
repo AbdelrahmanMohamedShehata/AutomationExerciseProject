@@ -1,0 +1,18 @@
+<suite name="parallelSuite" parallel ="methods" thread-count ="2">
+    <test name="parallelTests">
+        <classes>
+            <class name="PagesTest.SignupPageTest"/>
+            <class name="PagesTest.SignupInfoPageTest"/>
+            <class name="PagesTest.HomePageTest"/>
+            <class name="PagesTest.ContactUsPageTest"/>
+            <class name="PagesTest.LoginPageTest"/>
+            <class name="PagesTest.ProductsPageTest"/>
+            <class name="PagesTest.SearchForProduct"/>
+            <class name="PagesTest.ProductPageTest"/>
+            <class name="PagesTest.ProductReviewTest"/>
+            <class name="PagesTest.ShoppingCartPage"/>
+            <class name="PagesTest.CheckoutPageTest"/>
+            <class name="PagesTest.PaymentPageTest"/>
+        </classes>
+    </test>
+</suite>

@@ -1,70 +1,61 @@
 package PagesTest;
+import Assertions.Validation;
+import Utils.Pages.ContactUsPage;
+import Utils.UIActions.ElementActions;
+import Utils.Pages.HomePage;
+import Utils.Pojo.DataHelperMethods;
+import org.testng.annotations.*;
 
-import Pages.ContactUsPage;
-import Pages.DriverManager;
-import Pages.ElementActions;
-import Pages.HomePage;
-import org.openqa.selenium.WebDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
-
-import static Data.ContactUsData.*;
+import static Utils.Driver.DriverManager.*;
 
 public class ContactUsPageTest {
 
-    private WebDriver driver;
-    DriverManager driverManager;
     HomePage home = new HomePage();
-    ContactUsPage contactus = new ContactUsPage();
-    ElementActions action ;
+    ContactUsPage contactUsPage = new ContactUsPage();
+    ElementActions action = new ElementActions();
+    Validation validation = new Validation();
+    DataHelperMethods helperMethod = new DataHelperMethods();
 
-    @BeforeClass
+    @BeforeMethod
     public void openBrowser(){
-        action = new ElementActions();
-        driverManager = new DriverManager(driver);
-        driverManager.setupDriver();
-        driver = driverManager.getDriver();
-        action.Click(home.navigateToContactUsPage(driver));
+        createInstance(helperMethod.getBrowserNames(0).getBrowser());
+        action.navigation(getDriver(),helperMethod.getUrlData(0).getHomeUrl());
+        action.Click(home.navigateToContactUsPage(getDriver()));
     }
 
-    SoftAssert soft = new SoftAssert();
 
     @Test
     public void validateNavigationToContactusPage() {
+
         String expectedUrl = "https://www.automationexercise.com/contact_us";
-        String actualUrl = driver.getCurrentUrl();
-        soft.assertEquals(actualUrl,expectedUrl,"error Msg : assert1 ");
+        String actualUrl = action.getCurrentUrl(getDriver());
+        validation.assertEqualsString(actualUrl,expectedUrl,"error message : assert 1");
 
         String expectedOutput = "CONTACT US";
-        String actualOutput = action.getText(contactus.getContactUsText(driver));
-        soft.assertEquals(actualOutput,expectedOutput,"error message : assert 2");
-        soft.assertAll();
+        String actualOutput = action.getText(contactUsPage.getContactUsText(getDriver()));
+        validation.assertEqualsString(actualOutput,expectedOutput,"error message : assert 1");
+        validation.assertAll();
     }
 
     @Test
     public void sendContactUsDetailsSuccessfully() {
-        action.SendKeys(contactus.contactUsNameField(driver),getName());
-        action.SendKeys(contactus.contactUsEmailField(driver),getEmail());
-        action.SendKeys(contactus.contactUsSubjectField(driver),getSubject());
-        action.SendKeys(contactus.contactUsMessageField(driver),getMessage());
-        action.SendKeys(contactus.uploadFileField(driver),getFilePath());
-        action.Click(contactus.clickOnSubmitButton(driver));
-        driver.switchTo().alert().accept();
+       String path = helperMethod.getContactusData(0).getFilePath().toString();
 
-        soft.assertTrue(action.isEnabled(contactus.successHomeButton(driver)),"error Msg : assert 1");
-
+        contactUsPage.contactUsSteps(getDriver(),helperMethod.getContactusData(0).getName(),helperMethod.getContactusData(0).getEmail(),
+                helperMethod.getContactusData(0).getSubject(),helperMethod.getContactusData(0).getMessage(),
+                helperMethod.getAbsolutePathFromJson(path));
+        getDriver().switchTo().alert().accept();
+        boolean enable = action.isEnabled(contactUsPage.successHomeButton(getDriver()));
+        validation.assertTrueBoolean(enable,"error message : assert 1");
         String expectedOutput = "Your details have been submitted";
-        String actualOutput = action.getText(contactus.getContactUsSuccessMsg(driver));
-        soft.assertTrue(actualOutput.contains(expectedOutput),"error message : assert 2");
-
-        soft.assertAll();
+        String actualOutput = action.getText(contactUsPage.getContactUsSuccessMsg(getDriver()));
+        validation.assertTrueString(actualOutput,expectedOutput,"error message : assert 1");
+        validation.assertAll();
     }
 
-    @AfterClass
+    @AfterMethod
     public void quitDriver(){
-        driverManager.quitDriver(driver);
+        tearDown();
     }
 
 }

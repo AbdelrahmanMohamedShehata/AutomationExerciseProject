@@ -3,7 +3,7 @@
     <test name="sequentialTests">
         <classes>
             <class name="PagesTest.SignupPageTest" />
-            <class name="PagesTest.SignupInfoPageTest" />
+            <class name="PagesTest.SignupInfoPageTest"/>
             <class name="PagesTest.HomePageTest" />
             <class name="PagesTest.ContactUsPageTest" />
             <class name="PagesTest.LoginPageTest" />

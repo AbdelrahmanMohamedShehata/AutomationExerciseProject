@@ -1,0 +1,26 @@
+[
+  {
+    "productName": "Premium",
+    "subCategoryName": "T-Shirts",
+    "categoryName": "Men",
+    "price": 1500,
+    "quantity": 2,
+    "availability": "In Stock",
+    "condition": " New",
+    "brand": "Polo",
+    "totalPrice": 3000
+  },{
+  "productName": "Green Side Placket Detail",
+  "subCategoryName": "T-Shirts",
+  "categoryName": "Men",
+  "price": 1000,
+  "quantity": 4,
+  "availability": "In Stock",
+  "condition": " New",
+  "brand": "Polo",
+  "totalPrice": 4000
+},
+  {
+    "totalPrice": 7000
+  }
+]
