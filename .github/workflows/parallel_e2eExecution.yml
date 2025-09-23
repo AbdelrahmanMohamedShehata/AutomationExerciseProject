@@ -25,6 +25,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.9
+
       - name: Cache Maven packages
         uses: actions/cache@v3
         with:
@@ -34,6 +39,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Run TestNG suite
+        shell: cmd
         run: mvn clean test -DsuiteXmlFile=${{ matrix.suite }}
 
       - name: Download Allure Commandline
@@ -52,6 +58,7 @@ jobs:
         with:
           name: Allure-Report-${{ matrix.suite }}
           path: test-results/allure-report
+
 
 
 
