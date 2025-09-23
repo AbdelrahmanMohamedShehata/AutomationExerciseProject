@@ -12,7 +12,7 @@ public class ProductsPage {
     ElementActions action = new ElementActions();
 
     // locators
-    By productsButton = By.cssSelector("ul.nav a[href=\"/products\"]");  // this one //a[contains(@href,"/products")]
+    By productsButton = By.cssSelector("ul.nav.navbar-nav a[href=\"/products\"]");  // this one //a[contains(@href,"/products")]
     By allProductsText = By.cssSelector("h2.title");
     By searchedProductsTXt = By.cssSelector("h2.title");
     By categoryText = By.xpath("//h2[text()=\"Category\"]");
