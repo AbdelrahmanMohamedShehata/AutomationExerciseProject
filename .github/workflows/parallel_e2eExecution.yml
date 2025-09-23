@@ -48,7 +48,7 @@ jobs:
           allure generate test-results/allure-results --clean -o test-results/allure-report
 
       - name: Upload Allure Report
-        uses: actions/upload-artifact@4
+        uses: actions/upload-artifact@v4
         with:
           name: Allure-Report-${{ matrix.suite }}
           path: test-results/allure-report
