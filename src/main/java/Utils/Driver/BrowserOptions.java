@@ -17,7 +17,7 @@ public class BrowserOptions {
         options.addArguments("--start-maximized");
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-extensions");
-     //   options.addArguments("--headless");
+        options.addArguments("--headless");
 
         Map<String,Object> prefs = new HashMap<>();
         prefs.put("profile.default_content_setting_values.notifications", 2);
