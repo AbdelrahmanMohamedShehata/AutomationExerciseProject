@@ -6,13 +6,18 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static Utils.Logs.log4j.error;
+
 public class ProductsPage {
 
     // objects
     ElementActions action = new ElementActions();
 
     // locators
-    By productsButton = By.cssSelector("ul.nav a[href=\"/products\"]");  // this one //a[contains(@href,"/products")]
+    By productsButton = By.cssSelector("ul.nav.navbar-nav a[href=\"/products\"]");  // this one //a[contains(@href,"/products")]
     By allProductsText = By.cssSelector("h2.title");
     By searchedProductsTXt = By.cssSelector("h2.title");
     By categoryText = By.xpath("//h2[text()=\"Category\"]");
@@ -35,7 +40,7 @@ public class ProductsPage {
     By viewCart = By.cssSelector("p a[href=\"/view_cart\"]");
     By continueShopping = By.cssSelector("button[data-dismiss=\"modal\"]");
     By ProductsImgUrl= By.cssSelector("div[class*=\"productinfo\"] img");
-
+    By productsId = By.cssSelector("div.features_items div.productinfo a");
 
     // WebElement methods
 
@@ -45,6 +50,17 @@ public class ProductsPage {
 
     public WebElement getAllProductsText(WebDriver driver) {
         return action.explicitWaitWithByVisibility(allProductsText,driver,7);
+    }
+
+    public List<String> getAllProductsId(WebDriver driver) {
+        List<String> IDs = new ArrayList<>();
+       List <WebElement> elements = action.getWebElements(driver,productsId,10);
+       for(WebElement element:elements){
+          String id = action.getAttribute(element,"data-product-id");
+           IDs.add(id);
+       }
+        error("the list is empty or invalid:",elements.toString());
+       return IDs;
     }
 
     public WebElement getSearchedProductsText(WebDriver driver) {

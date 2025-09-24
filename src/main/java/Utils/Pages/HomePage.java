@@ -12,7 +12,7 @@ public class HomePage {
 
     // locators
 
-    By loginSignupButton = By.cssSelector("ul.nav a[href=\"/login\"]"); // this locator //a[contains(@href,"login")]
+    By loginSignupButton = By.cssSelector("ul.nav.navbar-nav a[href=\"/login\"]"); // this locator //a[contains(@href,"login")]
     By HomeText = By.xpath("//a[contains(text(),\"Home\")]");
     By AutomationPracticeText = By.cssSelector("img[src*=\"logo.png\"]");
     By AutomationExerciseText = By.cssSelector("div.item.active"); // //h1[contains(text(),"Exercise")]

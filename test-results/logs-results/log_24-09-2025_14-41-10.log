@@ -1,0 +1,19 @@
+[DEBUG] - [24-09-2025 14:41:11] [main] [org.testng.TestNG:82] - suiteXmlPath: "C:\Users\Google\AppData\Local\JetBrains\IdeaIC2024.3\temp-testng-customsuite.xml"
+[INFO] - [24-09-2025 14:41:14] [main] [org.testng.internal.Utils:112] - [TestNG] Running:
+  C:\Users\Google\AppData\Local\JetBrains\IdeaIC2024.3\temp-testng-customsuite.xml
+
+[ERROR] - [24-09-2025 14:41:15] [main] [io.qameta.allure.util.NamingUtils:66] - Could not find parameter browser
+[INFO] - [24-09-2025 14:41:29] [main] [Utils.Driver.DriverManager:24] - Driver initialized on the browser: chrome
+[ERROR] - [24-09-2025 14:41:29] [main] [io.qameta.allure.util.NamingUtils:66] - Could not find parameter url
+[INFO] - [24-09-2025 14:41:36] [main] [Utils.UIActions.ElementActions:24] - navigated to the URL : https://www.automationexercise.com
+[INFO] - [24-09-2025 14:41:36] [main] [Utils.UIActions.ElementActions:24] - waited for:7 seconds for element: [[ChromeDriver: chrome on windows (864b7575c0cd760a31ef4c2708db9713)] -> css selector: ul.nav.navbar-nav a[href="/login"]] to be clickable
+[INFO] - [24-09-2025 14:41:37] [main] [Utils.UIActions.ElementActions:24] - clicked on element : [[ChromeDriver: chrome on windows (864b7575c0cd760a31ef4c2708db9713)] -> css selector: ul.nav.navbar-nav a[href="/login"]]
+[INFO] - [24-09-2025 14:41:38] [main] [Utils.UIActions.ElementActions:24] - waited for:7 seconds for element: [[ChromeDriver: chrome on windows (864b7575c0cd760a31ef4c2708db9713)] -> css selector: div.login-form input[data-qa="login-email"]] to be clickable
+[INFO] - [24-09-2025 14:41:38] [main] [Utils.UIActions.ElementActions:24] - sent data alexpato@gmail.com  in element : [[ChromeDriver: chrome on windows (864b7575c0cd760a31ef4c2708db9713)] -> css selector: div.login-form input[data-qa="login-email"]]
+[INFO] - [24-09-2025 14:41:38] [main] [Utils.UIActions.ElementActions:24] - create Web element from locator: By.name: password
+[INFO] - [24-09-2025 14:41:39] [main] [Utils.UIActions.ElementActions:24] - sent data 123asd  in element : [[ChromeDriver: chrome on windows (864b7575c0cd760a31ef4c2708db9713)] -> name: password]
+[INFO] - [24-09-2025 14:41:39] [main] [Utils.UIActions.ElementActions:24] - waited for:5 seconds for element: [[ChromeDriver: chrome on windows (864b7575c0cd760a31ef4c2708db9713)] -> css selector: div.login-form button[data-qa="login-button"]] to be clickable
+[INFO] - [24-09-2025 14:41:43] [main] [Utils.UIActions.ElementActions:24] - clicked on element : [[ChromeDriver: chrome on windows (864b7575c0cd760a31ef4c2708db9713)] -> css selector: div.login-form button[data-qa="login-button"]]
+[INFO] - [24-09-2025 14:41:43] [main] [Utils.UIActions.ElementActions:24] - waited for:5 seconds for element: [[ChromeDriver: chrome on windows (864b7575c0cd760a31ef4c2708db9713)] -> css selector: ul.nav.navbar-nav a[href="/products"]] to be clickable
+[INFO] - [24-09-2025 14:41:48] [main] [Utils.UIActions.ElementActions:24] - clicked on element : [[ChromeDriver: chrome on windows (864b7575c0cd760a31ef4c2708db9713)] -> css selector: ul.nav.navbar-nav a[href="/products"]]
+[INFO] - [24-09-2025 14:41:49] [main] [Utils.Driver.DriverManager:24] - closed the driver successfully

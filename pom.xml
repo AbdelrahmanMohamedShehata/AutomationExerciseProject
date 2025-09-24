@@ -12,21 +12,27 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+            <aspectj.version>1.9.20.1</aspectj.version>
+            <suiteXmlFile>AutomationExercise\AutomationExercise\RunAllClassesSequentially.xml</suiteXmlFile>
+
     </properties>
 
     <build>
         <directory>test-results/target</directory>
     <plugins>
-    <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.2.5</version>
-        <configuration>
-            <argLine>
-                -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/1.9.20.1/aspectjweaver-1.9.20.1.jar"
-            </argLine>
-        </configuration>
-    </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.5.3</version>
+            <configuration>
+                <argLine>
+                    -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                </argLine>
+                <suiteXmlFiles>
+                    <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                </suiteXmlFiles>
+            </configuration>
+        </plugin>
     </plugins>
     </build>
 

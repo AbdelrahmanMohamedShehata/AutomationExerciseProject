@@ -286,6 +286,15 @@ If you passed more values, you'd access them as arguments[1], arguments[2], etc.
         return Element;
     }
 
+    @Step("use explicitWaitWithByClickable by locator: {locator} for {seconds} seconds")
+    public List<WebElement> explicitWaitWithByPresence (By locator , WebDriver driver, int seconds){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
+        List<WebElement> elements= wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
+        info("waited for:"+ seconds,"seconds for element:",elements.toString(),"to be presence");
+        return elements;
+    }
+
+
     @Step("return back to the previous page")
     public void returnBack(WebDriver driver){
         driver.navigate().back();
@@ -336,4 +345,12 @@ If you passed more values, you'd access them as arguments[1], arguments[2], etc.
         return filesName;
     }
 
+    public List<WebElement> getWebElements(WebDriver driver, By locator,int seconds){
+         elements = explicitWaitWithByPresence(locator,driver,seconds);
+         List<WebElement> Items = new ArrayList<>();
+         for (WebElement element:elements){
+             Items.add(element);
+         }
+        return Items;
+    }
 }

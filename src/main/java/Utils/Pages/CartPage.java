@@ -20,8 +20,8 @@ public class CartPage {
     By cartTotalPrice = By.cssSelector("tr#product-30 p.cart_total_price"); // //tr[@id="product-30"]//p[@class="cart_total_price"]
     By proceedToCheckoutButton = By.cssSelector("div.col-sm-6 a.btn"); //   a[class*="check_out"]
     By deleteItemFromCartGenerally = By.cssSelector("a.cart_quantity_delete");// delete cart generally or   //a[contains(@class,"delete")]
-    By deleteProduct30FromCart=By.cssSelector("tr#product-30 a[data-product-id=\"30\"]");
-    By deleteProduct29FromCart=By.cssSelector("tr#product-29 a[data-product-id=\"29\"]");
+    By deleteProduct30FromCart=By.cssSelector("tr#product-30 a.cart_quantity_delete");
+    By deleteProduct29FromCart=By.cssSelector("tr#product-29 a.cart_quantity_delete");
     By cartIsEmptyMsg = By.xpath("//b[contains(text(),\"empty\")]");
     By LoginRegisterButton = By.cssSelector("P.text-center a[href=\"/login\"]");
     By LoginMsgToContinueYouPaymentProcess = By.xpath("//p[contains(text(),\"Register / Login\")]"); // //p[text()= "Register / Login account to proceed on checkout."]
