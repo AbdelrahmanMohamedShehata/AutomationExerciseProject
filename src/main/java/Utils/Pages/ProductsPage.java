@@ -25,7 +25,7 @@ public class ProductsPage {
     By productName30 = By.xpath("//img[contains(@src,\"30\")]//following::p[1]");
     By productPrice29 = By.xpath("//img[contains(@src,\"29\")]//following::h2[1]");
     By productName29 = By.xpath("//img[contains(@src,\"29\")]//following::p[1]");
-    By viewProductButton30 = By.cssSelector("div.choose a[href*=\"30\"]"); // this locator
+    By viewProductButton30 = By.cssSelector("div.choose a[href*=\"30\"]"); // this
     By viewProductButton29 = By.cssSelector("div.choose a[href*=\"29\"]");
     By automationExerciseImage = By.cssSelector("img[src=\"/static/images/home/logo.png\"]");
     By specialOfferImage = By.id("sale_image");
