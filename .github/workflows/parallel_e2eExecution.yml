@@ -43,15 +43,18 @@ jobs:
         run: mvn clean test -DsuiteXmlFile=${{ matrix.suite }}
 
       - name: Download Allure Commandline
+        shell: pwsh
         run: |
-          curl -o allure.zip -L https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip
-          powershell -Command "Expand-Archive -Path allure.zip -DestinationPath allure"
-          echo "ALLURE_HOME=${{ github.workspace }}\allure\allure-2.27.0" >> $GITHUB_ENV
+             Invoke-WebRequest -Uri "https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.zip" -OutFile "allure.zip"
+             Expand-Archive -Path "allure.zip" -DestinationPath "allure"
+             $allureHome = "${{ github.workspace }}\allure\allure-2.27.0"
+             Add-Content -Path $env:GITHUB_ENV -Value "ALLURE_HOME=$allureHome"
 
       - name: Generate Allure Report
+        shell: pwsh
         run: |
-          $env:PATH += ";${{ env.ALLURE_HOME }}\bin"
-          allure generate test-results/allure-results --clean -o test-results/allure-report
+                $AllurePath = "${{ env.ALLURE_HOME }}\bin\allure.bat"
+                & $AllurePath generate test-results/allure-results --clean -o test-results/allure-report
 
       - name: Upload Allure Report
         uses: actions/upload-artifact@v4
