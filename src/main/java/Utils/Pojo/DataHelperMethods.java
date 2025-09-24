@@ -17,6 +17,7 @@ public class DataHelperMethods {
     List<signupInfo> signupInfoData;
     List<Signup> signup;
     List<InvalidData> invalidData;
+    List<ProductsId> productsId;
     JsonReader jsonReader = new JsonReader();
 
     public BrowserName getBrowserNames(int i){
@@ -95,6 +96,12 @@ public class DataHelperMethods {
         invalidData = jsonReader.readData(".\\src\\main\\resources\\JsonData\\invalid_Data.json",
                 new TypeReference<List<InvalidData>>(){});
         return invalidData;
+    }
+
+    public List<ProductsId> getAllProductsId(){
+        productsId = jsonReader.readData(".\\src\\main\\resources\\JsonData\\ProductsId.json",
+                new TypeReference<List<ProductsId>>(){});
+        return productsId;
     }
 
     public String getAbsolutePathFromJson(String path){

@@ -7,6 +7,10 @@ import Utils.Pages.LoginPage;
 import Utils.Pages.ProductsPage;
 import Utils.Pojo.DataHelperMethods;
 import org.testng.annotations.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static Utils.Driver.DriverManager.*;
 
 public class ProductsPageTest {
@@ -130,6 +134,17 @@ public class ProductsPageTest {
         int actualUrl = action.getBrokenUrl(getDriver(),products.getImgUrls(),"src");
         validation.assertEqualsInt(actualUrl,0,"error message : assert 13");
 
+    }
+
+    @Test
+    public void checkAllProductsId(){
+       List<String> actualId = products.getAllProductsId(getDriver());
+        for (int x=0;x<34;x++){
+           String expectedId = helperMethod.getAllProductsId().get(x).getProductId();
+           String ActualId = actualId.get(x);
+           validation.assertEqualsString(ActualId,expectedId,"error message : assert x: "+ x);
+        }
+          validation.assertAll();
     }
 
     @Test
